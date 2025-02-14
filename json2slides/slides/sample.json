@@ -1,0 +1,82 @@
+[
+    {
+      "title": "What is AI?",
+      "content": [
+        "Artificial Intelligence (AI) refers to systems or machines that mimic human intelligence.",
+        "AI can improve decision-making, perform tasks efficiently, and learn from data."
+      ],
+      "notes": "Speaker Note: Mention examples like image recognition and voice assistants."
+    },
+    {
+      "title": "History of AI",
+      "content": [
+        "AI research began in the 1950s.",
+        "The term 'Artificial Intelligence' was coined at the Dartmouth Conference in 1956."
+      ],
+      "notes": "Speaker Note: Emphasize the evolution from symbolic AI to machine learning."
+    },
+    {
+      "title": "Machine Learning",
+      "content": [
+        "A subset of AI that learns patterns from data.",
+        "Includes supervised, unsupervised, and reinforcement learning."
+      ],
+      "notes": "Speaker Note: Provide real-world ML examples (recommendation systems, spam filters)."
+    },
+    {
+      "title": "Deep Learning",
+      "content": [
+        "Uses neural networks with multiple layers to learn complex patterns.",
+        "Fueled by large datasets and powerful GPUs."
+      ],
+      "notes": "Speaker Note: Mention popular frameworks like TensorFlow and PyTorch."
+    },
+    {
+      "title": "Natural Language Processing",
+      "content": [
+        "Focuses on the interaction between computers and human language.",
+        "Includes tasks like sentiment analysis, translation, and chatbots."
+      ],
+      "notes": "Speaker Note: Point out recent advances like transformer-based models (e.g., GPT)."
+    },
+    {
+      "title": "Computer Vision",
+      "content": [
+        "Enables machines to interpret and understand visual data.",
+        "Used in facial recognition, self-driving cars, and more."
+      ],
+      "notes": "Speaker Note: Mention how deep learning revolutionized image classification."
+    },
+    {
+      "title": "Robotics and AI",
+      "content": [
+        "Combining robotics with AI for perception, decision-making, and actions.",
+        "Examples: factory automation, robotic surgery, and drones."
+      ],
+      "notes": "Speaker Note: Mention ethical considerations with autonomous systems."
+    },
+    {
+      "title": "AI Ethics",
+      "content": [
+        "Involves fairness, transparency, and accountability in AI systems.",
+        "Focus on responsible usage to avoid bias or misuse."
+      ],
+      "notes": "Speaker Note: Highlight guidelines from organizations like IEEE and the EU Commission."
+    },
+    {
+      "title": "Current Trends",
+      "content": [
+        "AI-driven tools for healthcare, finance, and education.",
+        "Generative AI for creating text, images, and more."
+      ],
+      "notes": "Speaker Note: Cite recent success stories and breakthroughs."
+    },
+    {
+      "title": "Future of AI",
+      "content": [
+        "Continued growth in automation and cognitive computing.",
+        "Potential for AGI (Artificial General Intelligence) remains debated."
+      ],
+      "notes": "Speaker Note: Encourage open discussion on the societal impact of advanced AI."
+    }
+  ]
