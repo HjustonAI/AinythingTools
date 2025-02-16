@@ -1,31 +1,18 @@
-require('dotenv').config();
+const config = require('./config');
 const puppeteer = require('puppeteer');
 const readline = require('readline');
 
-// Read credentials and configuration from environment variables
-const email = process.env.ICON8_EMAIL;
-const password = process.env.ICON8_PASSWORD;
-const LOGIN_URL = process.env.LOGIN_URL;
-const TARGET_URL = process.env.TARGET_URL;
-const chromeExecutable = process.env.CHROME_EXECUTABLE_PATH;
-const userDataDir = process.env.USER_DATA_DIR;
-const DEBUG_MODE = process.env.DEBUG_MODE === 'true';
-
-// Centralized selectors
-const SELECTORS = {
-  emailInput: 'input[placeholder="Email"]',
-  passwordInput: 'input[placeholder="Password"]',
-  loginButton: 'button.i8-login-form__submit',
-  gridIcon: '.app-grid-icon__image',
-  iconsGrid: '.grid-icons',
-  detailView: '.app-accordion2__content',
-  addToCollectionLabel: '.accordion-to-collection .i8-dropdown__label',
-  addToCollectionContent: '.accordion-to-collection .i8-dropdown__content',
-  newCollectionButton: '.accordion-to-collection .new-collection__button',
-  newCollectionContainer: 'div.new-collection__container',
-  newCollectionInput: 'div.new-collection__container input[placeholder="Collection name..."]',
-  headerCollectionName: '.author-group-header h3',
-};
+// Destructure configuration values for cleaner access.
+const {
+  email,
+  password,
+  LOGIN_URL,
+  chromeExecutable,
+  userDataDir,
+  DEBUG_MODE,
+  SELECTORS,
+  collectionLinks,
+} = config;
 
 // Helper function: wait for user to press Enter if debug mode is enabled.
 async function waitForKeyPress(message = 'Press Enter to continue...') {
@@ -118,11 +105,12 @@ async function login(page) {
 /**
  * Navigates the page to the target icons collection.
  * @param {object} page - Puppeteer page object.
- * @returns {string} TARGET_URL used.
+ * @param {string} targetUrl - URL to navigate to.
+ * @returns {string} The URL used.
  */
-async function navigateToTarget(page) {
-  console.log(`Navigating to ${TARGET_URL}`);
-  await page.goto(TARGET_URL, { waitUntil: 'networkidle2' });
+async function navigateToTarget(page, targetUrl) {
+  console.log(`Navigating to ${targetUrl}`);
+  await page.goto(targetUrl, { waitUntil: 'networkidle2' });
   await waitForKeyPress('Navigation complete. Debug: Press Enter to check icons presence...');
 
   try {
@@ -141,12 +129,12 @@ async function navigateToTarget(page) {
     throw error;
   }
 
-  return TARGET_URL;
+  return targetUrl;
 }
 
 /**
  * Processes all icons on the page.
- * On the first icon, creates a new collection based on header data.
+ * For the first collection page, it triggers the new collection popup using first three icons.
  * @param {object} page - Puppeteer page object.
  */
 async function processIcons(page) {
@@ -168,7 +156,7 @@ async function processIcons(page) {
       } catch (err) {
         console.warn(`No detail view for icon ${i + 1}.`);
       }
-      // Ensure clean state if detail view didn't stick
+      // Ensure clean state if detail view didn't stick.
       await page.keyboard.press('Escape');
       await randomDelay(200, 300);
     } catch (clickErr) {
@@ -222,7 +210,7 @@ async function processIcons(page) {
     if (DEBUG_MODE) {
       console.log("Debug Mode: Please open DevTools and verify if the collection name input element is present.");
       await waitForKeyPress("After verifying/fixing the page manually, press Enter to retry...");
-      // Retry one more time manually
+      // Retry one more time manually.
       await retryOperation(async () => {
         await page.waitForSelector(SELECTORS.newCollectionContainer, { timeout: 10000 });
         await page.waitForSelector(SELECTORS.newCollectionInput, { timeout: 10000 });
@@ -237,7 +225,7 @@ async function processIcons(page) {
     }
   });
 
-  // Now iterate through all icons and send key 'A' to add them to the new collection
+  // Now iterate through all icons and send key 'A' to add them to the new collection.
   console.log("Adding all icons to the new collection...");
   for (let i = 0; i < icons.length; i++) {
     try {
@@ -249,7 +237,7 @@ async function processIcons(page) {
       console.log(`Sent 'A' key for icon ${i + 1}`);
       await randomDelay(40, 80);
       await randomDelay(180, 220);
-      // Close the detail view if open
+      // Close the detail view if open.
       await page.keyboard.press('Escape');
       await randomDelay(280, 320);
     } catch (err) {
@@ -274,13 +262,17 @@ async function processIcons(page) {
 
   try {
     await login(page);
-    await navigateToTarget(page);
-    await processIcons(page);
+
+    // Iterate through collection links defined in config.
+    for (const targetUrl of collectionLinks) {
+      console.log(`Processing collection: ${targetUrl}`);
+      await navigateToTarget(page, targetUrl);
+      await processIcons(page);
+    }
   } catch (error) {
     console.error("Automation encountered an error:", error);
   } finally {
     console.log("All icons processed. Closing browser.");
-    // Auto-close browser if not in debug mode.
     if (!DEBUG_MODE) {
       await browser.close();
     }
