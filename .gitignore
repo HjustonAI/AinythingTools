@@ -35,3 +35,6 @@ venv/
 # Credentials and API tokens (DO NOT commit these)
 credentials.json
 token.json
+
+progress.json
+collectionLinks.json
