@@ -3,6 +3,7 @@ const puppeteer = require('puppeteer');
 const { login } = require('./login');
 const { navigateToTarget } = require('./navigation');
 const { processIcons } = require('./processIcons');
+const { loadProgress, saveProgress } = require('./progressManager');
 
 const { chromeExecutable, userDataDir, DEBUG_MODE, collectionLinks } = config;
 
@@ -20,10 +21,20 @@ const { chromeExecutable, userDataDir, DEBUG_MODE, collectionLinks } = config;
 
   try {
     await login(page);
+    const progress = loadProgress(); // Load or create an empty progress object
+
     for (const targetUrl of collectionLinks) {
       console.log(`Processing collection: ${targetUrl}`);
       await navigateToTarget(page, targetUrl);
-      await processIcons(page);
+
+      // Get the saved start index or default to 0
+      const startIndex = progress[targetUrl] || 0;
+      console.log(`Resume from icon index: ${startIndex}`);
+
+      // After processing icons, record the last processed index
+      const lastProcessed = await processIcons(page, startIndex);
+      progress[targetUrl] = lastProcessed;
+      saveProgress(progress); // Save the updated progress
     }
   } catch (error) {
     console.error("Automation encountered an error:", error);

@@ -2,6 +2,8 @@
 const puppeteer = require('puppeteer');
 const { LOGIN_URL, chromeExecutable, userDataDir, DEBUG_MODE } = require('./config');
 const readline = require('readline');
+const fs = require('fs');
+const path = require('path');
 
 // Helper for waiting for key press when DEBUG_MODE is enabled.
 async function waitForKeyPress(message = 'Press Enter to continue...') {
@@ -48,9 +50,15 @@ async function extractLinks(collectionUrl) {
       return href.startsWith('/') ? new URL(href, window.location.origin).href : href;
     })
   );
-
+  
   console.log('Extracted links:');
   links.forEach(link => console.log(link));
+  
+  // Write the links to a JSON file
+  const filePath = path.join(__dirname, 'collectionLinks.json');
+  fs.writeFileSync(filePath, JSON.stringify(links, null, 2));
+  console.log(`Extracted links written to ${filePath}`);
+  
   await browser.close();
 }
 
