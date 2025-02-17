@@ -1,3 +1,8 @@
+/* 
+This configuration file loads environment variables, authentication credentials,
+and selector constants from the .env file and a separate collection links JSON.
+Error handling is implemented using try/catch when reading collection links.
+*/
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');

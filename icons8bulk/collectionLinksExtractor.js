@@ -1,3 +1,8 @@
+/* 
+This script uses Puppeteer to extract collection links from a target page.
+It waits for necessary elements on the page, then writes the links to a JSON file.
+Errors occurring during navigation or extraction are caught and logged.
+*/
 // Language: JavaScript
 const puppeteer = require('puppeteer');
 const { LOGIN_URL, chromeExecutable, userDataDir, DEBUG_MODE } = require('./config');

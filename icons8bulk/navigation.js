@@ -1,3 +1,9 @@
+/* 
+This file defines the navigateToTarget function which navigates to a given URL
+using Puppeteer. It waits for necessary elements such as icon grid and handles errors
+by logging them and rethrowing so that the caller can manage navigation failures.
+*/
+
 const { SELECTORS } = require('./config');
 const { waitForKeyPress } = require('./utils');
 
@@ -13,7 +19,7 @@ async function navigateToTarget(page, targetUrl) {
     await page.waitForSelector(SELECTORS.iconsGrid, { timeout: 15000 });
   } catch (error) {
     console.error("Error during navigation:", error);
-    // Optionally: prompt user for retry or save state before continuing
+    // Optionally update state or prompt user; here we rethrow to be caught by caller.
     throw error;
   }
   return targetUrl;

@@ -247,27 +247,33 @@ async function processIcons(page) {
 }
 
 (async function main() {
-  console.log("Launching browser with existing Chrome profile...");
-  const browser = await puppeteer.launch({
-    headless: false,
-    executablePath: chromeExecutable,
-    userDataDir: userDataDir,
-  });
-
-  const page = await browser.newPage();
-
-  // Set the viewport to a higher resolution.
-  await page.setViewport({ width: 1920, height: 1080 });
-  console.log("Viewport set to 1920x1080.");
-
   try {
+    console.log("Launching browser with existing Chrome profile...");
+    const browser = await puppeteer.launch({
+      headless: false,
+      executablePath: chromeExecutable,
+      userDataDir: userDataDir,
+    });
+
+    const page = await browser.newPage();
+
+    // Set the viewport to a higher resolution.
+    await page.setViewport({ width: 1920, height: 1080 });
+    console.log("Viewport set to 1920x1080.");
+
     await login(page);
 
-    // Iterate through collection links defined in config.
     for (const targetUrl of collectionLinks) {
-      console.log(`Processing collection: ${targetUrl}`);
-      await navigateToTarget(page, targetUrl);
-      await processIcons(page);
+      try {
+        console.log(`Processing collection: ${targetUrl}`);
+        await navigateToTarget(page, targetUrl);
+        // Save current state before processing
+        await updateProgress(targetUrl, 0, 0, true);
+        const result = await processIcons(page); 
+      } catch (collectionError) {
+        console.error(`Error processing collection ${targetUrl}:`, collectionError);
+        await updateProgress(targetUrl, 100, 0, false);
+      }
     }
   } catch (error) {
     console.error("Automation encountered an error:", error);

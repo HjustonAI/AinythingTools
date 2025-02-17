@@ -1,3 +1,9 @@
+/* 
+This is the main file orchestrating the automation workflow:
+logging in, navigating to each collection, and processing icons.
+Errors are caught at the collection level and logged, and cleanup is ensured
+in the finally block, with browser closure governed by the DEBUG_MODE flag.
+*/
 const config = require('./config');
 const puppeteer = require('puppeteer');
 const { login } = require('./login');
@@ -44,7 +50,7 @@ const { chromeExecutable, userDataDir, DEBUG_MODE, collectionLinks } = config;
         console.log(`- Success: ${result.success ? 'Yes' : 'No'}`);
       } catch (collectionError) {
         console.error(`Error processing collection ${targetUrl}:`, collectionError);
-        // Optionally update progress state here before moving to the next URL.
+        await updateProgress(targetUrl, 100, 0, false);
       }
     }
 

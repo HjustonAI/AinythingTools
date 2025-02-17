@@ -1,3 +1,9 @@
+/* 
+This file handles the login process by navigating to the login page, filling out
+credentials, and clicking the login button. It uses try/catch for error management.
+If elements are missing or timeouts occur, errors are logged and the function retries.
+*/
+
 const { LOGIN_URL, SELECTORS, email, password } = require('./config');
 const { waitForKeyPress } = require('./utils');
 

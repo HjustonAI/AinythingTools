@@ -1,3 +1,8 @@
+/* 
+This script converts the old progress JSON file into a new format by mapping
+each collection's progress with a timestamp. The conversion is wrapped in a try/catch,
+logging errors in case of file read/write failures.
+*/
 const fs = require('fs');
 const path = require('path');
 
@@ -22,5 +27,5 @@ try {
   console.log('Progress file converted successfully!');
 } catch (error) {
   console.error("Error converting progress file:", error);
-  // Optionally: write backup file and/or allow manual intervention
+  // Optionally create a backup file here
 }

@@ -1,3 +1,10 @@
+/* 
+This file contains functions to load and process icons on a collection page.
+It scrolls to load icons, triggers detail popups, and adds icons to a collection.
+Errors during individual icon processing are caught inside loops and logged,
+with progress updates ensuring that failures do not stop the overall process.
+*/
+
 const { SELECTORS } = require('./config');
 const { waitForKeyPress, randomDelay } = require('./utils');
 const { updateProgress } = require('./progressManager');
@@ -92,6 +99,8 @@ async function processIcons(page, startIndex) {
         await randomDelay(500, 700);
       } catch (error) {
         console.error("Error during new collection creation:", error);
+        // Save state before continuing
+        await updateProgress(page.url(), totalIcons, processedCount, false);
       }
     }
 
