@@ -15,7 +15,7 @@ try {
     Object.entries(oldProgress).map(([url, processed], index) => {
       const timestamp = new Date(baseTime.getTime() + index * 15 * 60000);
       return [url, {
-        processed: typeof processed === 'number' ? processed : processed.processed,
+        processed: typeof processed === 'number' ? processed : (typeof processed.processed === 'number' ? processed.processed : 0),
         total: 100,
         success: processed === 100,
         lastAttempt: timestamp.toISOString()

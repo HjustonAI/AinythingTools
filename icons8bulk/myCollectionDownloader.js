@@ -52,6 +52,8 @@ async function downloadCollection(page, collection) {
     console.log('Waiting for download to complete...');
     await randomDelay(5000, 7000);
 
+    // Suggestion: Investigate if download events can be captured rather than using fixed delays.
+
     // Close the modal after download starts
     await page.waitForSelector(DOWNLOAD_SELECTORS.modalCloseButton);
     await page.click(DOWNLOAD_SELECTORS.modalCloseButton);

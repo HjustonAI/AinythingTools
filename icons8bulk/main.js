@@ -9,7 +9,7 @@ const puppeteer = require('puppeteer');
 const { login } = require('./login');
 const { navigateToTarget } = require('./navigation');
 const { processIcons } = require('./processIcons');
-const { loadProgress } = require('./progressManager');
+const { loadProgress, updateProgress } = require('./progressManager');
 
 const { chromeExecutable, userDataDir, DEBUG_MODE, collectionLinks } = config;
 

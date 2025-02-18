@@ -46,6 +46,7 @@ async function getCollectionsList(page) {
       );
     });
 
+    // Suggestion: Review the filtering criteria for collection names if '0' is not intended.
     return collections;
   } catch (error) {
     console.error('Error getting collections list:', error);

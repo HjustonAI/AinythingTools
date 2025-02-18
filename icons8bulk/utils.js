@@ -1,14 +1,18 @@
 const readline = require('readline');
 const { DEBUG_MODE } = require('./config');
 
+function createReadlineInterface() {
+  return readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+}
+
 function waitForKeyPress(message = 'Press Enter to continue...') {
   if (!DEBUG_MODE) return Promise.resolve();
   console.log(message);
   return new Promise(resolve => {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
+    const rl = createReadlineInterface();
     rl.question('', () => {
       rl.close();
       resolve();

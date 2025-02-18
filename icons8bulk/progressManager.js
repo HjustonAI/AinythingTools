@@ -1,7 +1,20 @@
+/* 
+This module handles progress tracking and persistence for the automation workflow.
+It maintains a JSON file that tracks:
+- Processed collections
+- Success/failure status
+- Last attempt timestamps
+- Progress counts
+Key features:
+- Progress validation
+- Auto-recovery
+- Progress persistence
+*/
 const fs = require('fs');
 const path = require('path');
 
 const PROGRESS_FILE = path.join(__dirname, 'progress.json');
+const BACKUP_FILE = path.join(__dirname, 'progress_backup.json');
 
 // Validate progress data structure
 function isValidProgress(data) {
@@ -26,6 +39,11 @@ function loadProgress() {
     }
   } catch (error) {
     console.error("Error loading progress file:", error);
+    if (fs.existsSync(PROGRESS_FILE)) {
+      console.log("Backing up corrupted progress file...");
+      fs.copyFileSync(PROGRESS_FILE, BACKUP_FILE);
+      console.log("Backup created successfully");
+    }
   }
   console.log("Creating new progress tracking file");
   return {};

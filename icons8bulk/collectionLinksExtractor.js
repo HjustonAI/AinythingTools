@@ -47,7 +47,9 @@ async function waitForKeyPress(message = 'Press Enter to continue...') {
     await waitForKeyPress('Collection page loaded. Press Enter to extract links...');
   
     // Wait for the container holding the links to appear.
-    await page.waitForSelector('div.pack-grid', { timeout: 10000 });
+    await retry(async () => {
+      await page.waitForSelector('div.pack-grid', { timeout: 10000 });
+    }, 3, 2000);
   
     // Extract anchor tags within the pack-grid container.
     const links = await page.$$eval('div.pack-grid a', elements =>
@@ -71,3 +73,16 @@ async function waitForKeyPress(message = 'Press Enter to continue...') {
     // Optionally prompt for retry or state saving here.
   }
 })(process.argv[2]);
+
+// Helper function to retry an async operation
+async function retry(fn, retries = 3, delay = 1000) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await fn();
+      return;
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+}

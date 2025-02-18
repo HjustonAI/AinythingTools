@@ -32,6 +32,33 @@ async function loadAllIcons(page) {
   return prevCount;
 }
 
+async function triggerCollectionPopup(icons, page) {
+  let popupTriggered = false;
+  console.log("Attempting to trigger new collection popup using first 3 icons...");
+
+  // Try first 3 icons to trigger the detail popup.
+  for (let i = 0; i < Math.min(3, icons.length); i++) {
+    try {
+      console.log(`Trying icon ${i + 1} for popup trigger.`);
+      await icons[i].click();
+      await randomDelay(280, 320);
+      // Wait for detail view to confirm popup appearance.
+      await page.waitForSelector(SELECTORS.detailView, { timeout: 2000 });
+      console.log(`Detail view appeared for icon ${i + 1}`);
+      popupTriggered = true;
+      break;
+    } catch (err) {
+      console.warn(`Popup not triggered with icon ${i + 1}:`, err);
+    }
+  }
+
+  // If not automatically triggered, wait for manual intervention.
+  if (!popupTriggered) {
+    console.log("Popup did not appear after clicking first 3 icons.");
+    await waitForKeyPress("Please manually open the popup then press Enter to continue...");
+  }
+}
+
 async function processIcons(page, startIndex) {
   let processedCount = startIndex;
   let success = true;
@@ -43,30 +70,7 @@ async function processIcons(page, startIndex) {
 
     const icons = await page.$$(SELECTORS.gridIcon);
     if (startIndex === 0) {
-      let popupTriggered = false;
-      console.log("Attempting to trigger new collection popup using first 3 icons...");
-
-      // Try first 3 icons to trigger the detail popup.
-      for (let i = 0; i < Math.min(3, icons.length); i++) {
-        try {
-          console.log(`Trying icon ${i + 1} for popup trigger.`);
-          await icons[i].click();
-          await randomDelay(280, 320);
-          // Wait for detail view to confirm popup appearance.
-          await page.waitForSelector(SELECTORS.detailView, { timeout: 2000 });
-          console.log(`Detail view appeared for icon ${i + 1}`);
-          popupTriggered = true;
-          break;
-        } catch (err) {
-          console.warn(`Popup not triggered with icon ${i + 1}:`, err);
-        }
-      }
-
-      // If not automatically triggered, wait for manual intervention.
-      if (!popupTriggered) {
-        console.log("Popup did not appear after clicking first 3 icons.");
-        await waitForKeyPress("Please manually open the popup then press Enter to continue...");
-      }
+      await triggerCollectionPopup(icons, page);
 
       // Create new collection using the header's data.
       try {

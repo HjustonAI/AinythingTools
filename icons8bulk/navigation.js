@@ -25,4 +25,6 @@ async function navigateToTarget(page, targetUrl) {
   return targetUrl;
 }
 
+// Suggestion: Optionally refactor debug prompts to a centralized logger.
+
 module.exports = { navigateToTarget };
