@@ -1,3 +1,14 @@
+/* 
+This script downloads icon collections from Icons8.com.
+It navigates to the collections page, extracts all user collections except
+"Favorites" and "Downloaded", and saves the collection data for further processing.
+Key features:
+- Collection list extraction
+- Sidebar navigation
+- Collection metadata parsing
+- Progress tracking
+*/
+
 // Language: JavaScript
 const puppeteer = require('puppeteer');
 const { login } = require('./login');

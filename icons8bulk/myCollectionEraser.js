@@ -1,3 +1,18 @@
+/*
+This script automates the deletion of Icons8 collections.
+After collections are downloaded, this tool:
+1. Loads the collection list from myCollectionLinks.json
+2. Visits each collection page
+3. Clicks the delete button
+4. Waits for confirmation message
+5. Verifies deletion completion
+Features:
+- Progress tracking
+- Deletion verification
+- Error handling
+- Configurable delays
+Dependencies: Requires login.js, config.js, and utils.js
+*/
 // Language: JavaScript
 const puppeteer = require('puppeteer');
 const { login } = require('./login');
@@ -18,16 +33,18 @@ async function deleteCollection(page, collection) {
   try {
     // Navigate to the collection page
     await page.goto(collection.url, { waitUntil: 'networkidle2' });
-    await randomDelay(1000, 2000);
+    await randomDelay(1500, 2500);
     
     // Wait for and click the delete button
     await page.waitForSelector(DELETE_SELECTORS.deleteButton, { timeout: 10000 });
     await page.click(DELETE_SELECTORS.deleteButton);
     console.log(`Clicked delete button for collection: ${collection.name}`);
+    await randomDelay(1500, 2500);
     
     // Wait for the snackbar confirmation message to appear
     await page.waitForSelector(DELETE_SELECTORS.snackbarText, { timeout: 10000 });
     console.log('Deletion confirmation message appeared.');
+    await randomDelay(1000, 1500);
     
     // Wait for the snackbar message to disappear
     await page.waitForFunction(
@@ -36,8 +53,8 @@ async function deleteCollection(page, collection) {
       DELETE_SELECTORS.snackbarText
     );
     console.log('Deletion confirmation message disappeared.');
+    await randomDelay(1500, 2500); // extra wait before moving on
     
-    await randomDelay(2000, 3000); // Pause before processing the next collection
     return true;
   } catch (error) {
     console.error(`Error deleting collection ${collection.name}:`, error);
@@ -68,6 +85,7 @@ async function main() {
   
   try {
     await login(page);
+    await randomDelay(2000, 3000);
     
     let successful = 0;
     let failed = 0;
@@ -81,6 +99,8 @@ async function main() {
       }
       
       console.log(`Progress: ${successful + failed}/${collections.length} (${successful} successful, ${failed} failed)`);
+      // Add a delay between processing collections
+      await randomDelay(2000, 3000);
     }
     
     console.log('\nDeletion Summary:');

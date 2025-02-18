@@ -1,3 +1,18 @@
+/*
+This script automates the downloading of Icons8 collections.
+For each collection in myCollectionLinks.json, it:
+1. Navigates to the collection page
+2. Clicks the download button
+3. Handles the download modal
+4. Waits for the download to start
+5. Closes the modal
+Features:
+- Progress tracking
+- Error handling
+- Configurable delays
+- Debug mode support
+Dependencies: Requires login.js, config.js, and utils.js
+*/
 const puppeteer = require('puppeteer');
 const { login } = require('./login');
 const { SELECTORS, chromeExecutable, userDataDir, DEBUG_MODE } = require('./config');
@@ -24,7 +39,7 @@ async function downloadCollection(page, collection) {
     await page.waitForSelector(DOWNLOAD_SELECTORS.downloadButton);
     await page.click(DOWNLOAD_SELECTORS.downloadButton);
     console.log('Clicked download button');
-    await randomDelay(10000, 20000);
+    await randomDelay(1000, 2000);
 
     // Wait for modal and click download
     await page.waitForSelector(DOWNLOAD_SELECTORS.modalWindow);
